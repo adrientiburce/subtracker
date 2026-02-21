@@ -24,10 +24,11 @@ function Tooltip({ text }) {
 }
 
 export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
-  const { currency, setCurrency, currencies, country, setCountry, countries, userName, setUserName, theme, setTheme } = useApp()
+  const { currency, setCurrency, currencies, country, setCountry, countries, userName, setUserName, theme, setTheme, digitGrouping, setDigitGrouping } = useApp()
   const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   const [showCountryModal, setShowCountryModal] = useState(false)
   const [showAppearanceModal, setShowAppearanceModal] = useState(false)
+  const [showNumberFormatModal, setShowNumberFormatModal] = useState(false)
   const [currencySearch, setCurrencySearch] = useState('')
   const [isEditingName, setIsEditingName] = useState(false)
   const [tempName, setTempName] = useState('')
@@ -43,7 +44,13 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
     { id: 'system', label: 'System default', icon: 'brightness_auto' },
   ]
 
+  const numberFormatOptions = [
+    { id: 'space', label: 'Space separator', example: '1 234.56' },
+    { id: 'comma', label: 'Comma separator', example: '1,234.56' },
+  ]
+
   const currentThemeLabel = themeOptions.find(t => t.id === theme)?.label || 'System default'
+  const currentNumberFormatLabel = numberFormatOptions.find(n => n.id === digitGrouping)?.example || '1 234.56'
 
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-gray-950">
@@ -182,7 +189,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
             {/* Appearance */}
             <button
               onClick={() => setShowAppearanceModal(true)}
-              className="w-full flex items-center justify-between p-4 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors"
+              className="w-full flex items-center justify-between p-4 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors border-b border-gray-100 dark:border-gray-800"
             >
               <div className="flex items-center gap-3">
                 <div className="size-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-blue-400">
@@ -191,6 +198,23 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
                 <div className="text-left">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white">Appearance</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">{currentThemeLabel}</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
+            </button>
+
+            {/* Number Format */}
+            <button
+              onClick={() => setShowNumberFormatModal(true)}
+              className="w-full flex items-center justify-between p-4 hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-blue-400">
+                  <span className="material-symbols-outlined">pin</span>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">Number Format</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{currentNumberFormatLabel}</p>
                 </div>
               </div>
               <span className="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
@@ -348,6 +372,34 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
                   </div>
                   <span className="font-semibold text-base flex-1 text-left">{t.label}</span>
                   {theme === t.id && <span className="material-symbols-outlined">check_circle</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Number Format Modal */}
+      {showNumberFormatModal && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6">
+            <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Number Format</h2>
+              <button onClick={() => setShowNumberFormatModal(false)} className="text-primary dark:text-blue-400 font-bold">Done</button>
+            </div>
+            <div className="space-y-2">
+              {numberFormatOptions.map(n => (
+                <button
+                  key={n.id}
+                  onClick={() => { setDigitGrouping(n.id); setShowNumberFormatModal(false) }}
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl transition-colors ${digitGrouping === n.id ? 'bg-primary/10 text-primary dark:text-blue-400 border-2 border-primary dark:border-blue-400' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800'}`}
+                >
+                  <div className="flex-1 text-left">
+                    <p className="font-semibold text-base">{n.label}</p>
+                    <p className="text-sm opacity-70 mt-1">{n.example}</p>
+                  </div>
+                  {digitGrouping === n.id && <span className="material-symbols-outlined">check_circle</span>}
                 </button>
               ))}
             </div>

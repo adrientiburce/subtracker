@@ -1,12 +1,13 @@
 import { useApp, toMonthly, toYearly } from '../context/AppContext'
 import { CATEGORIES, getCategoryById } from '../categories'
+import { formatNumber } from '../formatNumber'
 
-function BarRow({ label, color, amount, symbol, pct }) {
+function BarRow({ label, color, amount, symbol, pct, digitGrouping }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between text-sm">
         <span className="font-semibold text-gray-900 dark:text-white">{label}</span>
-        <span className="font-bold text-gray-900 dark:text-white">{symbol}{amount.toFixed(2)}<span className="text-xs font-normal text-gray-400 dark:text-gray-500"> /mo</span></span>
+        <span className="font-bold text-gray-900 dark:text-white">{symbol}{formatNumber(amount, digitGrouping)}<span className="text-xs font-normal text-gray-400 dark:text-gray-500"> /month</span></span>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
@@ -25,7 +26,7 @@ const RECURRENCE_COLORS = {
 }
 
 export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
-  const { subscriptions, currency, totalMonthly } = useApp()
+  const { subscriptions, currency, totalMonthly, digitGrouping } = useApp()
 
   // Category breakdown (normalized monthly)
   const catData = CATEGORIES
@@ -99,7 +100,7 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
                         <span className={`material-symbols-outlined text-sm ${cat.text}`}>{cat.icon}</span>
                       </div>
                       <div className="flex-1">
-                        <BarRow label={cat.label} color={barColor} amount={amount} symbol={currency.symbol} pct={pct} />
+                        <BarRow label={cat.label} color={barColor} amount={amount} symbol={currency.symbol} pct={pct} digitGrouping={digitGrouping} />
                       </div>
                     </div>
                   )
@@ -121,6 +122,7 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
                       amount={amount}
                       symbol={currency.symbol}
                       pct={pct}
+                      digitGrouping={digitGrouping}
                     />
                   )
                 })}
@@ -137,7 +139,7 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
                 <div>
                   <p className="text-sm font-bold text-gray-900 dark:text-white">Locked-in commitment</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    {currency.symbol}{lockedInTotal.toFixed(2)}/yr cannot be cancelled early
+                    {currency.symbol}{formatNumber(lockedInTotal, digitGrouping)}/year cannot be cancelled early
                   </p>
                 </div>
               </div>

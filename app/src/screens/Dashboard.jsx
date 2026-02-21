@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useApp, toMonthly } from '../context/AppContext'
 import { getCategoryById, CATEGORIES } from '../categories'
+import { formatNumber } from '../formatNumber'
 
 function LogoOrIcon({ sub, cat, size = 'size-12' }) {
   const [imgErr, setImgErr] = useState(false)
@@ -73,7 +74,7 @@ function ThreeDotsMenu({ onEdit, onDelete }) {
   )
 }
 
-function SubscriptionItem({ sub, currency, onEdit, onDelete }) {
+function SubscriptionItem({ sub, currency, digitGrouping, onEdit, onDelete }) {
   const cat = getCategoryById(sub.category)
   const monthly = toMonthly(sub)
 
@@ -92,8 +93,8 @@ function SubscriptionItem({ sub, currency, onEdit, onDelete }) {
         <RecurrenceLabel sub={sub} />
       </div>
       <div className="text-right shrink-0">
-        <p className="font-bold text-gray-900 dark:text-white text-sm">{currency.symbol}{sub.cost.toFixed(2)}</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500">{currency.symbol}{monthly.toFixed(2)}/mo</p>
+        <p className="font-bold text-gray-900 dark:text-white text-sm">{currency.symbol}{formatNumber(sub.cost, digitGrouping)}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">{currency.symbol}{formatNumber(monthly, digitGrouping)}/month</p>
       </div>
       <ThreeDotsMenu onEdit={onEdit} onDelete={onDelete} />
     </div>
@@ -123,7 +124,7 @@ function DeleteConfirm({ name, onConfirm, onCancel }) {
 }
 
 export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
-  const { subscriptions, currency, totalMonthly, totalYearly, deleteSubscription } = useApp()
+  const { subscriptions, currency, totalMonthly, totalYearly, deleteSubscription, digitGrouping } = useApp()
   const [deleteTarget, setDeleteTarget] = useState(null)
 
   // Group by category, sort within group by dateAdded descending
@@ -162,16 +163,16 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
           <div className="bg-primary dark:bg-blue-600 rounded-2xl p-4 text-white">
             <p className="text-xs font-semibold opacity-80 mb-2">Total Monthly</p>
             <p className="text-2xl font-extrabold leading-tight">
-              {currency.symbol}{totalMonthly.toFixed(2)}
-              <span className="text-sm font-normal opacity-80"> /mo</span>
+              {currency.symbol}{formatNumber(totalMonthly, digitGrouping)}
+              <span className="text-sm font-normal opacity-80"> /month</span>
             </p>
             <p className="text-xs opacity-70 mt-2">{subscriptions.length} services</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm">
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Total Yearly</p>
             <p className="text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
-              {currency.symbol}{totalYearly.toFixed(2)}
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /yr</span>
+              {currency.symbol}{formatNumber(totalYearly, digitGrouping)}
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /year</span>
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Est. annual cost</p>
           </div>
@@ -203,6 +204,7 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
                       key={sub.id}
                       sub={sub}
                       currency={currency}
+                      digitGrouping={digitGrouping}
                       onEdit={() => onEdit(sub)}
                       onDelete={() => setDeleteTarget(sub)}
                     />

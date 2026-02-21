@@ -94,6 +94,15 @@ export function AppProvider({ children }) {
     }
   })
 
+  const [digitGrouping, setDigitGrouping] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_digitgrouping')
+      return saved ? JSON.parse(saved) : 'space'
+    } catch {
+      return 'space'
+    }
+  })
+
   useEffect(() => {
     localStorage.setItem('subtracker_subs', JSON.stringify(subscriptions))
   }, [subscriptions])
@@ -113,6 +122,10 @@ export function AppProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('subtracker_theme', JSON.stringify(theme))
   }, [theme])
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_digitgrouping', JSON.stringify(digitGrouping))
+  }, [digitGrouping])
 
   useEffect(() => {
     const root = document.documentElement
@@ -167,6 +180,8 @@ export function AppProvider({ children }) {
       setUserName,
       theme,
       setTheme,
+      digitGrouping,
+      setDigitGrouping,
       totalMonthly,
       totalYearly,
     }}>
