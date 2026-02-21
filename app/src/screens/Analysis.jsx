@@ -2,11 +2,18 @@ import { useApp, toMonthly, toYearly } from '../context/AppContext'
 import { CATEGORIES, getCategoryById } from '../categories'
 import { formatNumber } from '../formatNumber'
 
-function BarRow({ label, color, amount, symbol, pct, digitGrouping }) {
+function BarRow({ label, color, amount, symbol, pct, digitGrouping, count }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between text-sm">
-        <span className="font-semibold text-gray-900 dark:text-white">{label}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-gray-900 dark:text-white">{label}</span>
+          {count !== undefined && (
+            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+              {count} {count === 1 ? 'sub' : 'subs'}
+            </span>
+          )}
+        </div>
         <span className="font-bold text-gray-900 dark:text-white">{symbol}{formatNumber(amount, digitGrouping)}<span className="text-xs font-normal text-gray-400 dark:text-gray-500"> /month</span></span>
       </div>
       <div className="flex items-center gap-2">
@@ -77,7 +84,7 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
               <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-4">By Category</h2>
               <div className="flex flex-col gap-4">
-                {catData.map(({ cat, amount }) => {
+                {catData.map(({ cat, amount, count }) => {
                   const pct = totalMonthly > 0 ? (amount / totalMonthly) * 100 : 0
                   const colorMap = {
                     'bg-red-100': 'bg-red-400',
@@ -100,7 +107,7 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
                         <span className={`material-symbols-outlined text-sm ${cat.text}`}>{cat.icon}</span>
                       </div>
                       <div className="flex-1">
-                        <BarRow label={cat.label} color={barColor} amount={amount} symbol={currency.symbol} pct={pct} digitGrouping={digitGrouping} />
+                        <BarRow label={cat.label} color={barColor} amount={amount} symbol={currency.symbol} pct={pct} digitGrouping={digitGrouping} count={count} />
                       </div>
                     </div>
                   )

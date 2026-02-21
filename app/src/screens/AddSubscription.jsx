@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
 import { CATEGORIES, getCategoryById } from '../categories'
 import commonSubs from '../data/commonSubscriptions.json'
@@ -25,6 +25,66 @@ function Tooltip({ text }) {
   )
 }
 
+function CategorySelector({ value, onChange }) {
+  const [showModal, setShowModal] = useState(false)
+  const selectedCat = getCategoryById(value)
+  
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 px-4 text-base text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all flex items-center justify-between"
+      >
+        <div className="flex items-center gap-3">
+          <div className={`size-8 rounded-lg flex items-center justify-center ${selectedCat.bg}`}>
+            <span className={`material-symbols-outlined text-lg ${selectedCat.text}`}>{selectedCat.icon}</span>
+          </div>
+          <span className="font-medium">{selectedCat.label}</span>
+        </div>
+        <span className="material-symbols-outlined text-gray-400 dark:text-gray-500">expand_more</span>
+      </button>
+      
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)}>
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Select Category</h2>
+              <button onClick={() => setShowModal(false)} className="text-primary dark:text-blue-400 font-bold">Done</button>
+            </div>
+            <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => { onChange(cat.id); setShowModal(false) }}
+                  className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all ${
+                    value === cat.id
+                      ? 'bg-primary/10 dark:bg-primary/20 border-2 border-primary dark:border-blue-400'
+                      : 'bg-gray-50 dark:bg-gray-800 border-2 border-transparent hover:border-gray-200 dark:hover:border-gray-700'
+                  }`}
+                >
+                  <div className={`size-12 rounded-xl flex items-center justify-center ${cat.bg}`}>
+                    <span className={`material-symbols-outlined text-2xl ${cat.text}`}>{cat.icon}</span>
+                  </div>
+                  <span className={`text-sm font-semibold text-center ${
+                    value === cat.id ? 'text-primary dark:text-blue-400' : 'text-gray-900 dark:text-white'
+                  }`}>
+                    {cat.label}
+                  </span>
+                  {value === cat.id && (
+                    <span className="material-symbols-outlined text-primary dark:text-blue-400 text-lg">check_circle</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function AddSubscription({ onBack, onSaved, initialSub }) {
   const { addSubscription, editSubscription, currency, country } = useApp()
   const isEdit = !!initialSub
@@ -40,13 +100,70 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
   const [logoUrl, setLogoUrl] = useState(initialSub?.logoUrl || '')
   const [notes, setNotes] = useState(initialSub?.notes || '')
   const [error, setError] = useState('')
+  
+  // Autocomplete state
+  const [autocompleteQuery, setAutocompleteQuery] = useState('')
+  const [showAutocomplete, setShowAutocomplete] = useState(false)
+  const [autocompleteResults, setAutocompleteResults] = useState([])
+  const [selectedAutocompleteIndex, setSelectedAutocompleteIndex] = useState(-1)
+  const autocompleteRef = useRef(null)
 
-  const suggestions = commonSubs.filter(s => s.country === country.code)
+  // Filter suggestions by country + category, limit to 12
+  const suggestions = commonSubs
+    .filter(s => s.country === country.code && s.category === category)
+    .slice(0, 12)
+
+  // Autocomplete search across all categories
+  const getAutocompleteResults = (query) => {
+    if (!query || query.length < 2) return []
+    
+    const lowerQuery = query.toLowerCase()
+    return commonSubs
+      .filter(s => 
+        s.country === country.code && 
+        s.name.toLowerCase().includes(lowerQuery)
+      )
+      .slice(0, 8)
+  }
+
+  // Update autocomplete results when query changes
+  useEffect(() => {
+    if (autocompleteQuery.length >= 2 && showAutocomplete) {
+      const results = getAutocompleteResults(autocompleteQuery)
+      setAutocompleteResults(results)
+    } else {
+      setAutocompleteResults([])
+    }
+  }, [autocompleteQuery, showAutocomplete, country.code])
+
+  // Click-outside detection for autocomplete
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (autocompleteRef.current && !autocompleteRef.current.contains(event.target)) {
+        setShowAutocomplete(false)
+        setSelectedAutocompleteIndex(-1)
+      }
+    }
+    
+    if (showAutocomplete) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showAutocomplete])
 
   const handleSuggestion = (s) => {
     setName(s.name)
     setCategory(s.category)
     setLogoUrl(s.logoUrl)
+  }
+
+  const handleAutocompleteSelect = (subscription) => {
+    setName(subscription.name)
+    setCategory(subscription.category)
+    setLogoUrl(subscription.logoUrl)
+    setAutocompleteQuery(subscription.name)
+    setShowAutocomplete(false)
+    setSelectedAutocompleteIndex(-1)
   }
 
   const handleSave = () => {
@@ -97,7 +214,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
         {!isEdit && suggestions.length > 0 && (
           <div className="px-4 pt-4 pb-2">
             <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-              Top in {country.label} {country.flag}
+              Top in {country.label} {country.flag} • {getCategoryById(category).label}
             </p>
             <div className="grid grid-cols-4 gap-2">
               {suggestions.map((s, i) => {
@@ -119,16 +236,116 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
           </div>
         )}
 
-        {/* Name */}
+        {/* Name with Autocomplete */}
         <div className="flex flex-col gap-1 px-4 py-4">
           <label className="text-sm font-semibold text-gray-900 dark:text-white ml-1">Subscription Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="e.g. Netflix, Spotify, Gym"
-            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 px-4 text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-          />
+          <div className="relative">
+            {logoUrl && (
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                <img 
+                  src={logoUrl} 
+                  alt={name}
+                  className="w-8 h-8 rounded-lg object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value)
+                setAutocompleteQuery(e.target.value)
+                setShowAutocomplete(true)
+                setSelectedAutocompleteIndex(-1)
+              }}
+              onFocus={() => {
+                if (autocompleteQuery.length >= 2) {
+                  setShowAutocomplete(true)
+                }
+              }}
+              onKeyDown={(e) => {
+                if (!showAutocomplete || autocompleteResults.length === 0) return
+                
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault()
+                  setSelectedAutocompleteIndex(prev => 
+                    prev < autocompleteResults.length - 1 ? prev + 1 : prev
+                  )
+                } else if (e.key === 'ArrowUp') {
+                  e.preventDefault()
+                  setSelectedAutocompleteIndex(prev => prev > 0 ? prev - 1 : -1)
+                } else if (e.key === 'Enter' && selectedAutocompleteIndex >= 0) {
+                  e.preventDefault()
+                  handleAutocompleteSelect(autocompleteResults[selectedAutocompleteIndex])
+                } else if (e.key === 'Escape') {
+                  setShowAutocomplete(false)
+                  setSelectedAutocompleteIndex(-1)
+                }
+              }}
+              placeholder="e.g. Netflix, Spotify, Gym"
+              className={`w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 ${logoUrl ? 'pl-14' : 'pl-4'} pr-4 text-base text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all`}
+            />
+            
+            {/* Autocomplete Dropdown */}
+            {showAutocomplete && autocompleteResults.length > 0 && (
+              <div 
+                ref={autocompleteRef}
+                className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-80 overflow-y-auto"
+              >
+                {autocompleteResults.map((sub, index) => {
+                  const cat = getCategoryById(sub.category)
+                  const isSelected = index === selectedAutocompleteIndex
+                  
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleAutocompleteSelect(sub)}
+                      className={`w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        isSelected ? 'bg-gray-50 dark:bg-gray-700' : ''
+                      } ${index === 0 ? 'rounded-t-lg' : ''} ${
+                        index === autocompleteResults.length - 1 ? 'rounded-b-lg' : ''
+                      }`}
+                    >
+                      {sub.logoUrl ? (
+                        <img 
+                          src={sub.logoUrl} 
+                          alt={sub.name}
+                          className="w-10 h-10 rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                          <span className="material-symbols-outlined text-gray-400 text-xl">
+                            image
+                          </span>
+                        </div>
+                      )}
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {sub.name}
+                        </div>
+                      </div>
+                      
+                      <div className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs ${cat.bg} ${cat.text}`}>
+                        <span className="material-symbols-outlined text-sm">{cat.icon}</span>
+                        <span>{cat.label}</span>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Category */}
+        <div className="flex flex-col gap-1 px-4 py-3">
+          <label className="text-sm font-semibold text-gray-900 dark:text-white ml-1">Category</label>
+          <CategorySelector value={category} onChange={setCategory} />
         </div>
 
         {/* Cost */}
@@ -199,23 +416,6 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
           )}
         </div>
 
-        {/* Category */}
-        <div className="flex flex-col gap-1 px-4 py-3">
-          <label className="text-sm font-semibold text-gray-900 dark:text-white ml-1">Category</label>
-          <div className="relative">
-            <select
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-14 px-4 pr-10 text-base text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none"
-            >
-              {CATEGORIES.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.label}</option>
-              ))}
-            </select>
-            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">expand_more</span>
-          </div>
-        </div>
-
         {/* Locked-In */}
         <div className="flex items-center justify-between px-4 py-4 border-t border-gray-50 dark:border-gray-800 mt-1">
           <div className="flex items-center gap-2">
@@ -237,7 +437,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
         </div>
 
         {/* Notes */}
-        <div className="flex flex-col gap-1 px-4 py-4">
+        <div className="flex flex-col gap-1 px-4 py-4 pb-8">
           <label className="text-sm font-semibold text-gray-900 dark:text-white ml-1">Notes (Optional)</label>
           <textarea
             value={notes}
@@ -249,7 +449,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
         </div>
 
         {error && (
-          <p className="text-red-500 dark:text-red-400 text-sm font-medium px-5 -mt-2">{error}</p>
+          <p className="text-red-500 dark:text-red-400 text-sm font-medium px-5 pb-4">{error}</p>
         )}
       </div>
 

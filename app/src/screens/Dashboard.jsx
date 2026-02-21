@@ -179,7 +179,7 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
         </div>
 
         {/* Grouped Subscriptions */}
-        <div className="px-4 mt-6 flex flex-col gap-5">
+        <div className="px-4 mt-6 flex flex-col gap-8">
           {subscriptions.length === 0 ? (
             <div className="text-center py-16 text-gray-400 dark:text-gray-500">
               <span className="material-symbols-outlined text-5xl mb-2 block">receipt_long</span>
@@ -188,17 +188,18 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
             </div>
           ) : (
             grouped.map(({ cat, items }) => (
-              <div key={cat.id} className={`rounded-2xl border ${cat.border} overflow-visible`}>
-                {/* Category Header */}
-                <div className={`${cat.sectionBg} dark:bg-gray-800/50 px-4 py-2.5 flex items-center gap-2 rounded-t-2xl`}>
+              <div key={cat.id} className="space-y-2">
+                {/* Simple Category Header */}
+                <div className="flex items-center gap-2 px-1">
                   <div className={`size-6 rounded-lg flex items-center justify-center ${cat.bg}`}>
                     <span className={`material-symbols-outlined text-sm ${cat.text}`}>{cat.icon}</span>
                   </div>
                   <span className={`text-xs font-bold uppercase tracking-wider ${cat.text}`}>{cat.label}</span>
-                  <span className="ml-auto text-xs font-semibold text-gray-400 dark:text-gray-500">{items.length}</span>
+                  <span className="ml-auto text-xs font-semibold text-gray-400 dark:text-gray-500">{items.length} {items.length === 1 ? 'item' : 'items'}</span>
                 </div>
-                {/* Items */}
-                <div className="flex flex-col gap-px bg-gray-50 dark:bg-gray-900 p-2 gap-2 rounded-b-2xl">
+                
+                {/* Items without container wrapper */}
+                <div className="space-y-2">
                   {items.map(sub => (
                     <SubscriptionItem
                       key={sub.id}
