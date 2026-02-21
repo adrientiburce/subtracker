@@ -1,0 +1,127 @@
+import { createContext, useContext, useState, useEffect } from 'react'
+
+const CURRENCIES = [
+  { code: 'USD', symbol: '$', label: 'USD - US Dollar ($)' },
+  { code: 'EUR', symbol: '€', label: 'EUR - Euro (€)' },
+  { code: 'GBP', symbol: '£', label: 'GBP - British Pound (£)' },
+  { code: 'JPY', symbol: '¥', label: 'JPY - Japanese Yen (¥)' },
+  { code: 'CAD', symbol: 'CA$', label: 'CAD - Canadian Dollar (CA$)' },
+  { code: 'AUD', symbol: 'A$', label: 'AUD - Australian Dollar (A$)' },
+  { code: 'CHF', symbol: 'CHF', label: 'CHF - Swiss Franc (CHF)' },
+  { code: 'BRL', symbol: 'R$', label: 'BRL - Brazilian Real (R$)' },
+]
+
+export const COUNTRIES = [
+  { code: 'France', label: 'France', flag: '🇫🇷' },
+  { code: 'Spain', label: 'Spain', flag: '🇪🇸' },
+]
+
+// Normalize any subscription cost to a monthly equivalent
+export const toMonthly = (sub) => {
+  if (sub.recurrenceType === 'Yearly') return sub.cost / 12
+  if (sub.recurrenceType === 'Custom' && sub.customRecurrence) {
+    const { unit, value } = sub.customRecurrence
+    if (unit === 'Weeks') return (sub.cost * 52) / 12 / value
+    if (unit === 'Months') return sub.cost / value
+  }
+  return sub.cost // Monthly
+}
+
+export const toYearly = (sub) => toMonthly(sub) * 12
+
+const DEFAULT_SUBS = [
+  { id: '1', name: 'Netflix', cost: 15.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'entertainment', logoUrl: 'https://www.google.com/s2/favicons?domain=netflix.com&sz=64', dateAdded: Date.now() - 5 * 86400000, country: 'France', notes: '' },
+  { id: '2', name: "Gold's Gym", cost: 45.00, recurrenceType: 'Monthly', isLockedIn: true, category: 'sport', logoUrl: '', dateAdded: Date.now() - 4 * 86400000, country: 'France', notes: '' },
+  { id: '3', name: 'Adobe CC', cost: 52.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'software', logoUrl: 'https://www.google.com/s2/favicons?domain=adobe.com&sz=64', dateAdded: Date.now() - 3 * 86400000, country: 'France', notes: '' },
+  { id: '4', name: 'Spotify', cost: 16.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'music', logoUrl: 'https://www.google.com/s2/favicons?domain=spotify.com&sz=64', dateAdded: Date.now() - 2 * 86400000, country: 'France', notes: '' },
+  { id: '5', name: 'Dropbox Plus', cost: 119.88, recurrenceType: 'Yearly', isLockedIn: false, category: 'productivity', logoUrl: 'https://www.google.com/s2/favicons?domain=dropbox.com&sz=64', dateAdded: Date.now() - 86400000, country: 'France', notes: '' },
+]
+
+const AppContext = createContext(null)
+
+export function AppProvider({ children }) {
+  const [subscriptions, setSubscriptions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_subs')
+      if (!saved) return DEFAULT_SUBS
+      // Migrate old records that used 'recurrence' field
+      return JSON.parse(saved).map(s => ({
+        ...s,
+        recurrenceType: s.recurrenceType || s.recurrence || 'Monthly',
+        isLockedIn: s.isLockedIn ?? false,
+        logoUrl: s.logoUrl || '',
+        dateAdded: s.dateAdded || Date.now(),
+        country: s.country || 'France',
+      }))
+    } catch {
+      return DEFAULT_SUBS
+    }
+  })
+
+  const [currency, setCurrency] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_currency')
+      return saved ? JSON.parse(saved) : CURRENCIES[0]
+    } catch {
+      return CURRENCIES[0]
+    }
+  })
+
+  const [country, setCountry] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_country')
+      return saved ? JSON.parse(saved) : COUNTRIES[0]
+    } catch {
+      return COUNTRIES[0]
+    }
+  })
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_subs', JSON.stringify(subscriptions))
+  }, [subscriptions])
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_currency', JSON.stringify(currency))
+  }, [currency])
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_country', JSON.stringify(country))
+  }, [country])
+
+  const addSubscription = (sub) => {
+    const newSub = { ...sub, id: Date.now().toString(), dateAdded: Date.now() }
+    setSubscriptions(prev => [...prev, newSub])
+  }
+
+  const editSubscription = (id, data) => {
+    setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, ...data } : s))
+  }
+
+  const deleteSubscription = (id) => {
+    setSubscriptions(prev => prev.filter(s => s.id !== id))
+  }
+
+  const totalMonthly = subscriptions.reduce((acc, s) => acc + toMonthly(s), 0)
+  const totalYearly = subscriptions.reduce((acc, s) => acc + toYearly(s), 0)
+
+  return (
+    <AppContext.Provider value={{
+      subscriptions,
+      addSubscription,
+      editSubscription,
+      deleteSubscription,
+      currency,
+      setCurrency,
+      currencies: CURRENCIES,
+      country,
+      setCountry,
+      countries: COUNTRIES,
+      totalMonthly,
+      totalYearly,
+    }}>
+      {children}
+    </AppContext.Provider>
+  )
+}
+
+export const useApp = () => useContext(AppContext)

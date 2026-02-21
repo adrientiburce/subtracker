@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - Subscription Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0b50da",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#111318] dark:text-white min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white dark:bg-background-dark border-b border-primary/10 px-4 py-4 flex items-center justify-between">
+<button class="flex items-center justify-center p-2 hover:bg-primary/5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Settings</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Profile Section Quick View -->
+<div class="px-4 py-6 flex items-center gap-4">
+<div class="size-16 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl">person</span>
+</div>
+<div>
+<h2 class="text-lg font-bold">Alex Johnson</h2>
+<p class="text-sm text-[#606e8a] dark:text-gray-400">Premium Member</p>
+</div>
+</div>
+<!-- General Settings Group -->
+<div class="px-4 mb-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-[#606e8a] dark:text-gray-500 mb-3 px-1">General Settings</h3>
+<div class="bg-white dark:bg-[#1a2130] rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<!-- Global Currency -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors border-b border-primary/5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Global Currency</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">USD ($)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#606e8a]">chevron_right</span>
+</button>
+<!-- Notifications Toggle -->
+<div class="w-full flex items-center justify-between p-4 border-b border-primary/5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Notifications</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">Renewal reminders &amp; alerts</p>
+</div>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all duration-200">
+<div class="h-full w-[24px] rounded-full bg-white shadow-sm"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<!-- Appearance -->
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">dark_mode</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Appearance</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">System default</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#606e8a]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Account Section Group -->
+<div class="px-4 mb-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-[#606e8a] dark:text-gray-500 mb-3 px-1">Account &amp; Billing</h3>
+<div class="bg-white dark:bg-[#1a2130] rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors border-b border-primary/5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Profile Details</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">Email, Password</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#606e8a]">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Subscription Plan</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">Pro Plan (Annual)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#606e8a]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Data Management Group -->
+<div class="px-4 mb-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-[#606e8a] dark:text-gray-500 mb-3 px-1">Data Management</h3>
+<div class="bg-white dark:bg-[#1a2130] rounded-xl overflow-hidden shadow-sm border border-primary/5">
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors border-b border-primary/5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">export_notes</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold">Export Data</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-400">Download CSV/JSON</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#606e8a]">download</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</div>
+<div class="text-left">
+<p class="text-sm font-semibold text-red-500">Delete Account</p>
+<p class="text-xs text-red-500/60">This action is permanent</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-red-500/60">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="text-center px-4 mb-10">
+<p class="text-xs text-[#606e8a] dark:text-gray-500">Version 2.4.1 (Build 1082)</p>
+<p class="text-xs text-[#606e8a] dark:text-gray-500 mt-1">Made with ❤️ for better finance</p>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-background-dark border-t border-primary/10 px-4 pb-6 pt-2 flex justify-around items-center">
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="text-[#606e8a] group-hover:text-primary transition-colors flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+</div>
+<p class="text-[#606e8a] group-hover:text-primary text-[10px] font-semibold leading-normal uppercase tracking-wider">Dashboard</p>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="text-[#606e8a] group-hover:text-primary transition-colors flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">list_alt</span>
+</div>
+<p class="text-[#606e8a] group-hover:text-primary text-[10px] font-semibold leading-normal uppercase tracking-wider">Subscriptions</p>
+</a>
+<a class="flex flex-col items-center gap-1" href="#">
+<div class="text-primary flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-2xl active-icon">settings</span>
+</div>
+<p class="text-primary text-[10px] font-semibold leading-normal uppercase tracking-wider">Settings</p>
+</a>
+</nav>
+<!-- Currency Selector Modal (Simulated hidden state) -->
+<!-- This would normally be toggled by JS, here it is shown as an example overlay hidden by display:none -->
+<div class="hidden fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
+<div class="w-full max-w-lg bg-white dark:bg-background-dark rounded-t-2xl shadow-2xl p-6">
+<div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-6"></div>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">Select Currency</h2>
+<button class="text-primary font-bold">Done</button>
+</div>
+<div class="relative mb-4">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full bg-background-light dark:bg-gray-800 border-none rounded-xl pl-10 pr-4 py-3 focus:ring-2 focus:ring-primary text-sm" placeholder="Search currencies..." type="text"/>
+</div>
+<div class="space-y-1 max-h-80 overflow-y-auto pr-2">
+<button class="w-full flex items-center justify-between p-3 rounded-lg bg-primary/10 text-primary">
+<span class="font-medium">USD - US Dollar ($)</span>
+<span class="material-symbols-outlined">check_circle</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="font-medium">EUR - Euro (€)</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="font-medium">GBP - British Pound (£)</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="font-medium">JPY - Japanese Yen (¥)</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="font-medium">CAD - Canadian Dollar ($)</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="font-medium">AUD - Australian Dollar ($)</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
