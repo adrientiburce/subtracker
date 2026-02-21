@@ -187,7 +187,7 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
             </div>
           ) : (
             grouped.map(({ cat, items }) => (
-              <div key={cat.id} className={`rounded-2xl border ${cat.border} overflow-hidden`}>
+              <div key={cat.id} className={`rounded-2xl border ${cat.border} overflow-visible`}>
                 {/* Category Header */}
                 <div className={`${cat.sectionBg} px-4 py-2.5 flex items-center gap-2`}>
                   <div className={`size-6 rounded-lg flex items-center justify-center ${cat.bg}`}>
