@@ -5,14 +5,14 @@ function BarRow({ label, color, amount, symbol, pct }) {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between text-sm">
-        <span className="font-semibold text-gray-900">{label}</span>
-        <span className="font-bold text-gray-900">{symbol}{amount.toFixed(2)}<span className="text-xs font-normal text-gray-400"> /mo</span></span>
+        <span className="font-semibold text-gray-900 dark:text-white">{label}</span>
+        <span className="font-bold text-gray-900 dark:text-white">{symbol}{amount.toFixed(2)}<span className="text-xs font-normal text-gray-400 dark:text-gray-500"> /mo</span></span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
           <div className={`h-full rounded-full ${color}`} style={{ width: pct + '%' }} />
         </div>
-        <span className="text-xs font-bold text-gray-500 w-10 text-right">{pct.toFixed(1)}%</span>
+        <span className="text-xs font-bold text-gray-500 dark:text-gray-400 w-10 text-right">{pct.toFixed(1)}%</span>
       </div>
     </div>
   )
@@ -49,23 +49,23 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
     .reduce((acc, s) => acc + toYearly(s), 0)
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light">
+    <div className="flex flex-col min-h-screen bg-background-light dark:bg-gray-950">
       {/* Header */}
-      <header className="bg-white px-4 pt-5 pb-4 sticky top-0 z-10 border-b border-gray-100">
+      <header className="bg-white dark:bg-gray-900 px-4 pt-5 pb-4 sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary">bar_chart</span>
+          <div className="size-10 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary dark:text-blue-400">bar_chart</span>
           </div>
           <div>
-            <h1 className="text-base font-bold text-gray-900 leading-tight">Analysis</h1>
-            <p className="text-xs text-gray-500">Spending breakdown</p>
+            <h1 className="text-base font-bold text-gray-900 dark:text-white leading-tight">Analysis</h1>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Spending breakdown</p>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto pb-28 px-4 pt-5 flex flex-col gap-5">
+      <main className="flex-1 overflow-y-auto pb-28 lg:pb-6 px-4 pt-5 flex flex-col gap-5">
         {subscriptions.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-gray-400 dark:text-gray-500">
             <span className="material-symbols-outlined text-5xl mb-2 block">bar_chart</span>
             <p className="font-semibold">No data yet</p>
             <p className="text-sm mt-1">Add subscriptions to see your analysis</p>
@@ -73,8 +73,8 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
         ) : (
           <>
             {/* Category Breakdown */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <h2 className="text-sm font-bold text-gray-900 mb-4">By Category</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-4">By Category</h2>
               <div className="flex flex-col gap-4">
                 {catData.map(({ cat, amount }) => {
                   const pct = totalMonthly > 0 ? (amount / totalMonthly) * 100 : 0
@@ -108,8 +108,8 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
             </div>
 
             {/* Recurrence Breakdown */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-              <h2 className="text-sm font-bold text-gray-900 mb-4">By Billing Cycle</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-white mb-4">By Billing Cycle</h2>
               <div className="flex flex-col gap-4">
                 {recurrenceData.map(({ type, amount }) => {
                   const pct = totalMonthly > 0 ? (amount / totalMonthly) * 100 : 0
@@ -125,18 +125,18 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
                   )
                 })}
               </div>
-              <p className="text-xs text-gray-400 mt-3">* All costs normalized to monthly equivalent</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">* All costs normalized to monthly equivalent</p>
             </div>
 
             {/* Locked-In Summary */}
             {lockedInTotal > 0 && (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-3">
-                <div className="size-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-amber-600">lock</span>
+              <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-amber-100 dark:bg-amber-900 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">lock</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-900">Locked-in commitment</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-sm font-bold text-gray-900 dark:text-white">Locked-in commitment</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     {currency.symbol}{lockedInTotal.toFixed(2)}/yr cannot be cancelled early
                   </p>
                 </div>
@@ -145,26 +145,6 @@ export default function Analysis({ onBack, onDashboard, onAdd, onSettings }) {
           </>
         )}
       </main>
-
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-100 px-4 pb-6 pt-3 flex items-center justify-around">
-        <button onClick={onDashboard} className="flex flex-col items-center gap-1 text-gray-400 hover:text-primary transition-colors">
-          <span className="material-symbols-outlined text-2xl">home</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Home</span>
-        </button>
-        <button onClick={onAdd} className="flex flex-col items-center gap-1 text-gray-400 hover:text-primary transition-colors">
-          <span className="material-symbols-outlined text-2xl">add</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Add</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 text-primary">
-          <span className="material-symbols-outlined icon-filled text-2xl">bar_chart</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Analysis</span>
-        </button>
-        <button onClick={onSettings} className="flex flex-col items-center gap-1 text-gray-400 hover:text-primary transition-colors">
-          <span className="material-symbols-outlined text-2xl">settings</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Settings</span>
-        </button>
-      </nav>
     </div>
   )
 }

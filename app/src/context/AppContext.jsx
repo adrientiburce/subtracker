@@ -76,6 +76,24 @@ export function AppProvider({ children }) {
     }
   })
 
+  const [userName, setUserName] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_username')
+      return saved ? JSON.parse(saved) : 'User'
+    } catch {
+      return 'User'
+    }
+  })
+
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('subtracker_theme')
+      return saved ? JSON.parse(saved) : 'system'
+    } catch {
+      return 'system'
+    }
+  })
+
   useEffect(() => {
     localStorage.setItem('subtracker_subs', JSON.stringify(subscriptions))
   }, [subscriptions])
@@ -87,6 +105,35 @@ export function AppProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('subtracker_country', JSON.stringify(country))
   }, [country])
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_username', JSON.stringify(userName))
+  }, [userName])
+
+  useEffect(() => {
+    localStorage.setItem('subtracker_theme', JSON.stringify(theme))
+  }, [theme])
+
+  useEffect(() => {
+    const root = document.documentElement
+    const applyTheme = (isDark) => {
+      if (isDark) {
+        root.classList.add('dark')
+      } else {
+        root.classList.remove('dark')
+      }
+    }
+
+    if (theme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      applyTheme(mediaQuery.matches)
+      const listener = (e) => applyTheme(e.matches)
+      mediaQuery.addEventListener('change', listener)
+      return () => mediaQuery.removeEventListener('change', listener)
+    } else {
+      applyTheme(theme === 'dark')
+    }
+  }, [theme])
 
   const addSubscription = (sub) => {
     const newSub = { ...sub, id: Date.now().toString(), dateAdded: Date.now() }
@@ -116,6 +163,10 @@ export function AppProvider({ children }) {
       country,
       setCountry,
       countries: COUNTRIES,
+      userName,
+      setUserName,
+      theme,
+      setTheme,
       totalMonthly,
       totalYearly,
     }}>
