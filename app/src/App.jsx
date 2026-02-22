@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AppProvider } from './context/AppContext'
 import Navigation from './components/Navigation'
+import UpdateNotification from './components/UpdateNotification'
 import Dashboard from './screens/Dashboard'
 import AddSubscription from './screens/AddSubscription'
 import Analysis from './screens/Analysis'
@@ -66,6 +67,9 @@ export default function App() {
             )}
           </div>
         </div>
+
+        {/* Update notification for PWA */}
+        <UpdateNotification />
       </div>
     </AppProvider>
   )
