@@ -30,11 +30,9 @@ export const toMonthly = (sub) => {
 export const toYearly = (sub) => toMonthly(sub) * 12
 
 const DEFAULT_SUBS = [
-  { id: '1', name: 'Netflix', cost: 15.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'entertainment', logoUrl: 'https://www.google.com/s2/favicons?domain=netflix.com&sz=64', dateAdded: Date.now() - 5 * 86400000, country: 'France', notes: '' },
-  { id: '2', name: "Gold's Gym", cost: 45.00, recurrenceType: 'Monthly', isLockedIn: true, category: 'sport', logoUrl: '', dateAdded: Date.now() - 4 * 86400000, country: 'France', notes: '' },
-  { id: '3', name: 'Adobe CC', cost: 52.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'software', logoUrl: 'https://www.google.com/s2/favicons?domain=adobe.com&sz=64', dateAdded: Date.now() - 3 * 86400000, country: 'France', notes: '' },
-  { id: '4', name: 'Spotify', cost: 16.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'music', logoUrl: 'https://www.google.com/s2/favicons?domain=spotify.com&sz=64', dateAdded: Date.now() - 2 * 86400000, country: 'France', notes: '' },
-  { id: '5', name: 'Dropbox Plus', cost: 119.88, recurrenceType: 'Yearly', isLockedIn: false, category: 'productivity', logoUrl: 'https://www.google.com/s2/favicons?domain=dropbox.com&sz=64', dateAdded: Date.now() - 86400000, country: 'France', notes: '' },
+  { id: '1', name: 'Netflix', cost: 15.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'entertainment', logoUrl: 'https://www.google.com/s2/favicons?domain=netflix.com&sz=64', dateAdded: Date.now() - 3 * 86400000, country: 'France', notes: '' },
+  { id: '2', name: "Gold's Gym", cost: 45.00, recurrenceType: 'Monthly', isLockedIn: true, category: 'sport', logoUrl: '', dateAdded: Date.now() - 2 * 86400000, country: 'France', notes: '' },
+  { id: '3', name: 'Spotify', cost: 16.99, recurrenceType: 'Monthly', isLockedIn: false, category: 'music', logoUrl: 'https://www.google.com/s2/favicons?domain=spotify.com&sz=64', dateAdded: Date.now() - 86400000, country: 'France', notes: '' },
 ]
 
 const AppContext = createContext(null)
