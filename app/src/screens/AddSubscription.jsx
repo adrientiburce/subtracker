@@ -209,7 +209,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-28 lg:pb-6">
+      <div className="flex-1 overflow-y-auto pb-32 lg:pb-24">
         {/* Quick-select suggestions (only when adding) */}
         {!isEdit && suggestions.length > 0 && (
           <div className="px-4 pt-4 pb-2">
@@ -293,7 +293,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
             {showAutocomplete && autocompleteResults.length > 0 && (
               <div 
                 ref={autocompleteRef}
-                className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-80 overflow-y-auto"
+                className="absolute z-40 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 max-h-80 overflow-y-auto"
               >
                 {autocompleteResults.map((sub, index) => {
                   const cat = getCategoryById(sub.category)
@@ -454,7 +454,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
       </div>
 
       {/* Sticky Save Button */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800">
+      <div className="absolute bottom-20 lg:bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 z-30">
         <button
           onClick={handleSave}
           className="w-full h-14 rounded-xl bg-primary dark:bg-blue-600 text-white text-base font-bold hover:bg-blue-700 dark:hover:bg-blue-700 active:scale-[.98] transition-all shadow-lg shadow-primary/20"
