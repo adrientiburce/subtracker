@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AppProvider } from './context/AppContext'
 import Navigation from './components/Navigation'
 import UpdateNotification from './components/UpdateNotification'
+import InstallPrompt from './components/InstallPrompt'
 import Dashboard from './screens/Dashboard'
 import AddSubscription from './screens/AddSubscription'
 import Analysis from './screens/Analysis'
@@ -65,12 +66,13 @@ export default function App() {
                 onAnalysis={() => setScreen('analysis')}
               />
             )}
-          </div>
         </div>
-
-        {/* Update notification for PWA */}
-        <UpdateNotification />
       </div>
-    </AppProvider>
-  )
+
+      {/* PWA notifications */}
+      <UpdateNotification />
+      <InstallPrompt />
+    </div>
+  </AppProvider>
+)
 }

@@ -25,10 +25,8 @@ if ('serviceWorker' in navigator) {
       .then((registration) => {
         console.log('SW registered:', registration)
 
-        // Check for updates every 60 seconds
-        setInterval(() => {
-          registration.update()
-        }, 60000)
+        // Check for updates only once on app launch (no interval)
+        registration.update()
 
         // Check for waiting service worker
         if (registration.waiting) {
@@ -59,4 +57,26 @@ if ('serviceWorker' in navigator) {
       })
   })
 }
+
+// Capture beforeinstallprompt event for PWA install prompt
+let deferredInstallPrompt = null
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  // Prevent the default browser install prompt
+  event.preventDefault()
+  // Store the event for later use
+  deferredInstallPrompt = event
+  console.log('Install prompt available')
+  
+  // Dispatch custom event to show our custom install UI
+  window.dispatchEvent(new CustomEvent('appInstallPromptAvailable', { 
+    detail: event 
+  }))
+})
+
+// Listen for successful app installation
+window.addEventListener('appinstalled', () => {
+  console.log('PWA installed successfully')
+  deferredInstallPrompt = null
+})
 

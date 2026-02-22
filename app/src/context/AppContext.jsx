@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const CURRENCIES = [
-  { code: 'USD', symbol: '$', label: 'USD - US Dollar ($)' },
   { code: 'EUR', symbol: '€', label: 'EUR - Euro (€)' },
+  { code: 'USD', symbol: '$', label: 'USD - US Dollar ($)' },
   { code: 'GBP', symbol: '£', label: 'GBP - British Pound (£)' },
   { code: 'JPY', symbol: '¥', label: 'JPY - Japanese Yen (¥)' },
   { code: 'CAD', symbol: 'CA$', label: 'CAD - Canadian Dollar (CA$)' },

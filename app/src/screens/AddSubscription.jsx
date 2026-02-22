@@ -151,6 +151,13 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
     }
   }, [showAutocomplete])
 
+  // Auto-check locked-in when Yearly is selected
+  useEffect(() => {
+    if (recurrenceType === 'Yearly') {
+      setIsLockedIn(true)
+    }
+  }, [recurrenceType])
+
   const handleSuggestion = (s) => {
     setName(s.name)
     setCategory(s.category)

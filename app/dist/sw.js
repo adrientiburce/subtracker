@@ -13,8 +13,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
   )
-  // Force the waiting service worker to become the active service worker
-  self.skipWaiting()
+  // Don't skip waiting - let user decide when to update via the UI
 })
 
 // Activate event - clean up old caches
