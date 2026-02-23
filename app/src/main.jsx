@@ -20,8 +20,11 @@ if ('serviceWorker' in navigator) {
     window.location.reload()
   })
 
+  // Determine SW path based on build target
+  const swPath = import.meta.env.CAPACITOR ? './sw.js' : '/subtracker/sw.js'
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/subtracker/sw.js')
+    navigator.serviceWorker.register(swPath)
       .then((registration) => {
         console.log('SW registered:', registration)
 

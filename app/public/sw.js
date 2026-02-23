@@ -1,10 +1,10 @@
 const CACHE_NAME = 'subtracker-v2'
 const RUNTIME_CACHE = 'subtracker-runtime'
 
-// Assets to precache
+// Assets to precache (relative to SW scope)
 const urlsToCache = [
-  '/subtracker/',
-  '/subtracker/index.html',
+  './',
+  './index.html',
 ]
 
 // Install event - precache critical assets
@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
           
           // If it's a navigation request and we don't have it cached, return the app shell
           if (request.mode === 'navigate') {
-            return caches.match('/subtracker/index.html')
+            return caches.match('./index.html')
           }
           
           return new Response('Offline - Resource not available', {
