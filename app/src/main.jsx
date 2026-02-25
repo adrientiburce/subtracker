@@ -10,7 +10,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 // Register service worker for PWA with update detection
-if ('serviceWorker' in navigator) {
+// Skip SW entirely in native Capacitor builds (WebViews don't reliably support SW)
+if ('serviceWorker' in navigator && !import.meta.env.CAPACITOR) {
   let refreshing = false
 
   // Reload page when new service worker takes control
@@ -20,8 +21,7 @@ if ('serviceWorker' in navigator) {
     window.location.reload()
   })
 
-  // Determine SW path based on build target
-  const swPath = import.meta.env.CAPACITOR ? './sw.js' : '/subtracker/sw.js'
+  const swPath = '/subtracker/sw.js'
 
   window.addEventListener('load', () => {
     navigator.serviceWorker.register(swPath)

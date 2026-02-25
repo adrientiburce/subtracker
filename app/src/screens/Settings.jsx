@@ -55,7 +55,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-gray-950">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 pt-safe pb-4 flex items-center justify-between">
         <button
           onClick={onBack}
           className="flex items-center justify-center p-2 hover:bg-primary/5 dark:hover:bg-primary/10 rounded-full transition-colors"
@@ -293,7 +293,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
       {/* Currency Modal */}
       {showCurrencyModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6 pb-safe">
             <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Select Currency</h2>
@@ -328,7 +328,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
       {/* Country Modal */}
       {showCountryModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6 pb-safe">
             <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Select Country</h2>
@@ -354,7 +354,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
       {/* Appearance Modal */}
       {showAppearanceModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6 pb-safe">
             <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Appearance</h2>
@@ -382,7 +382,7 @@ export default function Settings({ onBack, onDashboard, onAdd, onAnalysis }) {
       {/* Number Format Modal */}
       {showNumberFormatModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6 pb-safe">
             <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Number Format</h2>

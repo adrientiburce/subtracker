@@ -139,8 +139,19 @@ export function AppProvider({ children }) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       applyTheme(mediaQuery.matches)
       const listener = (e) => applyTheme(e.matches)
-      mediaQuery.addEventListener('change', listener)
-      return () => mediaQuery.removeEventListener('change', listener)
+      // Fallback for older WebViews that lack addEventListener on MediaQueryList
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', listener)
+      } else if (mediaQuery.addListener) {
+        mediaQuery.addListener(listener)
+      }
+      return () => {
+        if (mediaQuery.removeEventListener) {
+          mediaQuery.removeEventListener('change', listener)
+        } else if (mediaQuery.removeListener) {
+          mediaQuery.removeListener(listener)
+        }
+      }
     } else {
       applyTheme(theme === 'dark')
     }

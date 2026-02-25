@@ -47,7 +47,7 @@ function CategorySelector({ value, onChange }) {
       
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)}>
-          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl p-6 pb-safe" onClick={e => e.stopPropagation()}>
             <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Select Category</h2>
@@ -204,7 +204,7 @@ export default function AddSubscription({ onBack, onSaved, initialSub }) {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <div className="flex items-center bg-white dark:bg-gray-900 px-4 py-4 sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
+      <div className="flex items-center bg-white dark:bg-gray-900 px-4 pt-safe pb-4 sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
         <button
           onClick={onBack}
           className="text-primary dark:text-blue-400 flex size-10 shrink-0 items-center justify-center hover:bg-primary/5 dark:hover:bg-primary/10 rounded-full transition-colors"

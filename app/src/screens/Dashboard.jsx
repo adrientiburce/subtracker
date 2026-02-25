@@ -140,7 +140,7 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
   return (
     <div className="flex flex-col h-full min-h-screen bg-background-light dark:bg-gray-950">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-900 px-4 pt-5 pb-4 sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
+      <header className="bg-white dark:bg-gray-900 px-4 pt-safe pb-4 sticky top-0 z-10 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="size-10 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center">

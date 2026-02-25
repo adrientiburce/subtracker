@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Safe area utilities for native app (notch / Dynamic Island) */
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0px), 1.25rem);
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 1.5rem);
+}
+
 body {
   font-family: 'Manrope', sans-serif;
 }

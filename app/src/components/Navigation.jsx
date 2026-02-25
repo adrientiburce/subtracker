@@ -9,7 +9,7 @@ export default function Navigation({ currentScreen, onDashboard, onAdd, onAnalys
   return (
     <>
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 w-full bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-4 pb-6 pt-3 flex items-center justify-around z-50">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 w-full bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 px-4 pb-safe pt-3 flex items-center justify-around z-50">
         {navItems.map(item => (
           <button
             key={item.id}
