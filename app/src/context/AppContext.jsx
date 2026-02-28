@@ -170,6 +170,12 @@ export function AppProvider({ children }) {
     setSubscriptions(prev => prev.filter(s => s.id !== id))
   }
 
+  const [recurrenceFilter, setRecurrenceFilter] = useState(null)
+
+  const toggleRecurrenceFilter = (type) => {
+    setRecurrenceFilter(prev => prev === type ? null : type)
+  }
+
   const totalMonthly = subscriptions.reduce((acc, s) => acc + toMonthly(s), 0)
   const totalYearly = subscriptions.reduce((acc, s) => acc + toYearly(s), 0)
 
@@ -193,6 +199,8 @@ export function AppProvider({ children }) {
       setDigitGrouping,
       totalMonthly,
       totalYearly,
+      recurrenceFilter,
+      toggleRecurrenceFilter,
     }}>
       {children}
     </AppContext.Provider>

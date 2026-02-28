@@ -124,14 +124,25 @@ function DeleteConfirm({ name, onConfirm, onCancel }) {
 }
 
 export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
-  const { subscriptions, currency, totalMonthly, totalYearly, deleteSubscription, digitGrouping } = useApp()
+  const { subscriptions, currency, totalMonthly, totalYearly, deleteSubscription, digitGrouping, recurrenceFilter, toggleRecurrenceFilter } = useApp()
   const [deleteTarget, setDeleteTarget] = useState(null)
+
+  const isMonthlyActive = recurrenceFilter === 'Monthly'
+  const isYearlyActive = recurrenceFilter === 'Yearly'
+
+  // Apply recurrence filter for the list
+  const filteredSubs = recurrenceFilter
+    ? subscriptions.filter(s => {
+        if (recurrenceFilter === 'Monthly') return s.recurrenceType === 'Monthly' || s.recurrenceType === 'Custom'
+        return s.recurrenceType === 'Yearly'
+      })
+    : subscriptions
 
   // Group by category, sort within group by dateAdded descending
   const grouped = CATEGORIES
     .map(cat => ({
       cat,
-      items: subscriptions
+      items: filteredSubs
         .filter(s => s.category === cat.id)
         .sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0)),
     }))
@@ -148,7 +159,11 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
             </div>
             <div>
               <h1 className="text-base font-bold text-gray-900 dark:text-white leading-tight">Dashboard</h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{subscriptions.length} active subscriptions</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {recurrenceFilter
+                  ? filteredSubs.length + ' ' + recurrenceFilter.toLowerCase() + ' subscriptions'
+                  : subscriptions.length + ' active subscriptions'}
+              </p>
             </div>
           </div>
           <button className="size-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
@@ -160,31 +175,52 @@ export default function Dashboard({ onAdd, onSettings, onAnalysis, onEdit }) {
       <main className="flex-1 overflow-y-auto pb-28 lg:pb-6">
         {/* Cost Cards */}
         <div className="px-4 pt-5 grid grid-cols-2 gap-3">
-          <div className="bg-primary dark:bg-blue-600 rounded-2xl p-4 text-white">
-            <p className="text-xs font-semibold opacity-80 mb-2">Total Monthly</p>
-            <p className="text-2xl font-extrabold leading-tight">
+          <button
+            onClick={() => toggleRecurrenceFilter('Monthly')}
+            className={'rounded-2xl p-4 text-left transition-all duration-200 '
+              + (isMonthlyActive
+                ? 'bg-primary dark:bg-blue-600 text-white ring-2 ring-primary/50 dark:ring-blue-400/50 shadow-lg shadow-primary/20'
+                : 'bg-primary/10 dark:bg-blue-500/15 ring-1 ring-primary/20 dark:ring-blue-400/20')}
+          >
+            <p className={'text-xs font-semibold mb-2 ' + (isMonthlyActive ? 'opacity-80' : 'text-primary dark:text-blue-400')}>Total Monthly</p>
+            <p className={'text-2xl font-extrabold leading-tight ' + (isMonthlyActive ? '' : 'text-primary dark:text-blue-300')}>
               {currency.symbol}{formatNumber(totalMonthly, digitGrouping)}
-              <span className="text-sm font-normal opacity-80"> /month</span>
+              <span className={'text-sm font-normal ' + (isMonthlyActive ? 'opacity-80' : 'text-primary/60 dark:text-blue-400/60')}> /month</span>
             </p>
-            <p className="text-xs opacity-70 mt-2">{subscriptions.length} services</p>
-          </div>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Total Yearly</p>
-            <p className="text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
+            <p className={'text-xs mt-2 ' + (isMonthlyActive ? 'opacity-70' : 'text-primary/50 dark:text-blue-400/50')}>{subscriptions.length} services</p>
+          </button>
+          <button
+            onClick={() => toggleRecurrenceFilter('Yearly')}
+            className={'rounded-2xl p-4 text-left transition-all duration-200 '
+              + (isYearlyActive
+                ? 'bg-emerald-600 dark:bg-emerald-600 text-white ring-2 ring-emerald-500/50 dark:ring-emerald-400/50 shadow-lg shadow-emerald-500/20'
+                : 'bg-emerald-500/10 dark:bg-emerald-500/15 ring-1 ring-emerald-500/20 dark:ring-emerald-400/20')}
+          >
+            <p className={'text-xs font-semibold mb-2 ' + (isYearlyActive ? 'opacity-80' : 'text-emerald-600 dark:text-emerald-400')}>Total Yearly</p>
+            <p className={'text-2xl font-extrabold leading-tight ' + (isYearlyActive ? '' : 'text-emerald-600 dark:text-emerald-300')}>
               {currency.symbol}{formatNumber(totalYearly, digitGrouping)}
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400"> /year</span>
+              <span className={'text-sm font-normal ' + (isYearlyActive ? 'opacity-80' : 'text-emerald-600/60 dark:text-emerald-400/60')}> /year</span>
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Est. annual cost</p>
-          </div>
+            <p className={'text-xs mt-2 ' + (isYearlyActive ? 'opacity-70' : 'text-emerald-600/50 dark:text-emerald-400/50')}>Est. annual cost</p>
+          </button>
         </div>
 
         {/* Grouped Subscriptions */}
         <div className="px-4 mt-6 flex flex-col gap-8">
-          {subscriptions.length === 0 ? (
+          {filteredSubs.length === 0 ? (
             <div className="text-center py-16 text-gray-400 dark:text-gray-500">
               <span className="material-symbols-outlined text-5xl mb-2 block">receipt_long</span>
-              <p className="font-semibold">No subscriptions yet</p>
-              <p className="text-sm mt-1">Tap + to add your first one</p>
+              {recurrenceFilter ? (
+                <>
+                  <p className="font-semibold">No {recurrenceFilter.toLowerCase()} subscriptions</p>
+                  <p className="text-sm mt-1">Tap the card again to clear the filter</p>
+                </>
+              ) : (
+                <>
+                  <p className="font-semibold">No subscriptions yet</p>
+                  <p className="text-sm mt-1">Tap + to add your first one</p>
+                </>
+              )}
             </div>
           ) : (
             grouped.map(({ cat, items }) => (
